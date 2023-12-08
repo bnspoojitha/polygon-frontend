@@ -23,8 +23,9 @@ const Cdkconsole = () => {
           "Authorization" :  `Bearer ${JSON.parse(userAccessToken)}` 
         }
         try {
+          const url = process.env.REACT_APP_API_BASE_URL;
           const response = await fetch(
-            `http://localhost:8080/api/v1/polygon/address`,
+            `${url}/api/v1/polygon/address`,
             {
               method: "GET",
               headers: headers,
@@ -62,7 +63,8 @@ const Cdkconsole = () => {
           "Accept": "application/json",
           "Authorization" :  `Bearer ${JSON.parse(userAccessToken)}` 
         }
-        const response = await axios.post(`http://localhost:8080/api/v1/polygon/address?block=true`, payload,{
+        const url = process.env.REACT_APP_API_BASE_URL
+        const response = await axios.post(`${url}/api/v1/polygon/address?block=true`, payload,{
           headers: headers,
         });
         fetchData(); 
@@ -85,8 +87,9 @@ const Cdkconsole = () => {
           "Accept": "application/json",
           "Authorization" :  `Bearer ${JSON.parse(userAccessToken)}` 
         }
+        const url = process.env.REACT_APP_API_BASE_URL
         const payload = deploymentValue !== "" ? { address: deploymentValue } : { address: paymentValue };
-        const response = await axios.post(`http://localhost:8080/api/v1/polygon/address?block=false`, payload,{
+        const response = await axios.post(`${url}/api/v1/polygon/address?block=false`, payload,{
           headers: headers
         });
         fetchData(); 
