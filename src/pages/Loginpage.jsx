@@ -1,11 +1,41 @@
-import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import React,{useState} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useGlobalContext } from "../context/globalContext";
+import {reducerTypes, jwt } from "../reducers/globalReducer";
 const Loginpage = () =>{
     const navigate = useNavigate();
-    function onSubmit()  {
-        navigate('/Cdkconsole');
-
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const { state: globalState, dispatch: globalDispatch } = useGlobalContext();
+   async function onSubmit()  {
+    const payload = {
+      "email": username,
+      "password": password
+    }
+    const headers ={
+          "Content-Type": "application/json",
+          "Accept": "application/json" 
+    }
+    try {
+      const response = await axios.post(`http://localhost:8080/api/v1/auth/signin`, payload,{
+       headers : headers 
+      });
+      console.log(response, "Success response in router");
+      globalDispatch({
+        type: reducerTypes.SET_JWT,
+        payloadGlobal: {
+          jwt: response.data.token,
+        },
+      });
+      sessionStorage.setItem('userAccessToken', JSON.stringify(response.data.token)); 
+      navigate('/Cdkconsole');
+  
+    } 
+    catch (error) {
+      console.error("Error fetching data from server:", error);
+    }
+     
     }
     return(
         <div className="min-h-screen flex flex-col items-center justify-center">
@@ -20,8 +50,8 @@ const Loginpage = () =>{
                 type="text"
                 placeholder="type your username"
                 className="input input-round input-field"
-                // value={deploymentValue}
-                // onChange={(e)=>setDeplpoymentValue(e.target.value)}
+                value={username}
+                onChange={(e)=>setUsername(e.target.value)}
               />
             </div>
             <div className="flex items-center mb-4 space-x-4" >
@@ -30,8 +60,8 @@ const Loginpage = () =>{
                 type="password"
                 placeholder="type your password"
                 className="input input-round input-field"
-                // value={paymentValue}
-                // onChange={(e)=>setPaymentValue(e.target.value)}
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-around button-container">

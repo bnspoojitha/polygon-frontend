@@ -8,7 +8,6 @@ import Cdkconsole from "../pages/Cdkconsole";
 const Routers = () => {
   return (
     <Routes>
-      {/* <Route path="/" element={<Navigate to="/login" />} /> */}
       <Route path="/" element={<Loginpage />} />
       <Route path="/Cdkconsole" element={<Cdkconsole />} />
     </Routes>
